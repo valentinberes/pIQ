@@ -27,11 +27,16 @@
         android:id="@+id/imageView"
         android:contentDescription="@string/description_image_view"/>
 
-    <!--TextView that hosts OCR result-->
-    <TextView
+    <!--ScrollView contains TextView in case TextView has too many words-->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:id="@+id/textView" />
+        android:layout_height="wrap_content">
+        <!--TextView that hosts OCR result-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:id="@+id/textView" />
+    </ScrollView>
 
 </LinearLayout>

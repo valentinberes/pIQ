@@ -166,10 +166,10 @@ public class MainActivity extends AppCompatActivity {
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
         String message = "I found these words:\n\n";
 
-        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
-        if (labels != null) {
-            for (EntityAnnotation label : labels) {
-                message += String.format("%.3f: %s", label.getScore(), label.getDescription());
+        List<EntityAnnotation> words = response.getResponses().get(0).getTextAnnotations();
+        if (words != null) {
+            for (EntityAnnotation word : words) {
+                message += String.format("%s", word.getDescription());
                 message += "\n";
             }
         } else {
