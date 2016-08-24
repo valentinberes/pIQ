@@ -38,7 +38,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     static final int REQUEST_CAMERA = 1;
-    static final int REQUEST_INTERNET = 1;
+    static final int INT_MAX = 2147483647;
 
     static final String CLOUD_VISION_API_KEY = "AIzaSyDRaprkEKucImI202_eR34L56LshU7HTIo";
 
@@ -129,10 +129,18 @@ public class MainActivity extends AppCompatActivity {
 
                         // add the features we want
                         annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
+                            /* OCR
+                            Feature textDetection = new Feature();
+                            textDetection.setType("TEXT_DETECTION");
+                            textDetection.setMaxResults(INT_MAX);
+                            add(textDetection);
+                            */
+                            ///* LABEL
                             Feature labelDetection = new Feature();
-                            labelDetection.setType("TEXT_DETECTION");
-                            labelDetection.setMaxResults(9999);
+                            labelDetection.setType("LABEL_DETECTION");
+                            labelDetection.setMaxResults(20);
                             add(labelDetection);
+                            //*/
                         }});
 
                         // Add the list of one thing to the request
@@ -164,15 +172,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
+        /* OCR
         String message = "I found these words:\n\n";
 
         List<EntityAnnotation> words = response.getResponses().get(0).getTextAnnotations();
-        if (words != null) {
+        if (labels != null) {
             for (EntityAnnotation word : words) {
                 message += String.format("%s", word.getDescription());
                 message += "\n";
             }
-        } else {
+        }
+        */
+        ///* LABEL
+        String message = "I found these tags:\n\n";
+
+        List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
+        if (labels != null) {
+            for (EntityAnnotation label : labels) {
+                message += String.format("%s", label.getDescription());
+                message += "\n";
+            }
+        }
+        //*/
+        else {
             message += "nothing";
         }
 
