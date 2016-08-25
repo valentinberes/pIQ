@@ -1,30 +1,19 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion "24.0.1"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.3"
     defaultConfig {
         applicationId "com.piq.piq"
-        minSdkVersion 24
-        targetSdkVersion 24
-        versionCode 2
-        versionName '1.0.1'
+        minSdkVersion 23
+        targetSdkVersion 23
+        versionCode 3
+        versionName '1.1.0'
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
-    productFlavors {
-        v1_0 {
-            versionName '1.0'
-        }
-        v1_0_1 {
-            minSdkVersion 24
-            applicationId 'com.piq.piq'
-            targetSdkVersion 24
-            versionName '1.0.1'
         }
     }
 }
@@ -36,7 +25,7 @@ repositories {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:24.2.0'
+    compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.google.api-client:google-api-client-android:1.20.0' exclude module: 'httpclient'
     compile 'com.google.http-client:google-http-client-gson:1.20.0' exclude module: 'httpclient'
     compile 'com.google.apis:google-api-services-vision:v1-rev2-1.21.0'
