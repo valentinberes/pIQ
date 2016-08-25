@@ -21,12 +21,15 @@ import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.StreamingContent;
+import com.google.api.client.util.Strings;
 import com.google.api.services.vision.v1.Vision;
 import com.google.api.services.vision.v1.VisionRequestInitializer;
 import com.google.api.services.vision.v1.model.AnnotateImageRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesRequest;
 import com.google.api.services.vision.v1.model.BatchAnnotateImagesResponse;
 import com.google.api.services.vision.v1.model.EntityAnnotation;
+import com.google.api.services.vision.v1.model.FaceAnnotation;
 import com.google.api.services.vision.v1.model.Feature;
 import com.google.api.services.vision.v1.model.Image;
 
@@ -129,21 +132,33 @@ public class MainActivity extends AppCompatActivity {
 
                         // add the features we want
                         annotateImageRequest.setFeatures(new ArrayList<Feature>() {{
-                            /* OCR
+                            ///* OCR
                             Feature textDetection = new Feature();
                             textDetection.setType("TEXT_DETECTION");
                             textDetection.setMaxResults(INT_MAX);
                             add(textDetection);
-                            */
+                            //*/
                             ///* LABEL
                             Feature labelDetection = new Feature();
                             labelDetection.setType("LABEL_DETECTION");
                             labelDetection.setMaxResults(20);
                             add(labelDetection);
                             //*/
+                            ///* LOGOS
+                            Feature logoDetection = new Feature();
+                            logoDetection.setType("LOGO_DETECTION");
+                            logoDetection.setMaxResults(10);
+                            add(logoDetection);
+                            //*/
+                            ///* FACES
+                            Feature faceDetection = new Feature();
+                            faceDetection.setType("FACE_DETECTION");
+                            faceDetection.setMaxResults(5);
+                            add(faceDetection);
+                            //*/
                         }});
 
-                        // Add the list of one thing to the request
+                        // Add the list of four things to the request
                         add(annotateImageRequest);
                     }});
 
@@ -171,32 +186,68 @@ public class MainActivity extends AppCompatActivity {
         }.execute();
     }
 
+    // Convert API Response to String
     private String convertResponseToString(BatchAnnotateImagesResponse response) {
-        /* OCR
-        String message = "I found these words:\n\n";
-
+        String message = "";
+        ///* OCR
         List<EntityAnnotation> words = response.getResponses().get(0).getTextAnnotations();
-        if (labels != null) {
+        if (words != null) {
+            message += "I found these words:\n";
             for (EntityAnnotation word : words) {
                 message += String.format("%s", word.getDescription());
                 message += "\n";
             }
+        } else {
+            message += "I found no words.";
         }
-        */
-        ///* LABEL
-        String message = "I found these tags:\n\n";
+        message += "\n____________________________________________\n";
+        //*/
 
+        ///* LABEL
         List<EntityAnnotation> labels = response.getResponses().get(0).getLabelAnnotations();
         if (labels != null) {
+            message += "I found these tags:\n";
             for (EntityAnnotation label : labels) {
                 message += String.format("%s", label.getDescription());
                 message += "\n";
             }
+        } else {
+            message += "I found no tags.";
         }
+        message += "____________________________________________\n";
         //*/
-        else {
-            message += "nothing";
+
+        ///* LOGOS
+        List<EntityAnnotation> logos = response.getResponses().get(0).getLogoAnnotations();
+        if (logos != null) {
+            message += "I found these logos:\n\n";
+            for (EntityAnnotation logo : logos) {
+                message += String.format("%s", logo.getDescription());
+                message += "\n";
+            }
+        } else {
+            message += "I found no logos.";
         }
+        message += "\n____________________________________________\n";
+        //*/
+
+        ///* FACES
+        List<FaceAnnotation> faces = response.getResponses().get(0).getFaceAnnotations();
+        if (faces != null) {
+            message += "I found these facial expressions:\n\n";
+            for (FaceAnnotation face : faces) {
+                message += String.format("Joy: %s\n", face.getJoyLikelihood());
+                message += String.format("Sorrow: %s\n", face.getSorrowLikelihood());
+                message += String.format("Anger: %s\n", face.getAngerLikelihood());
+                message += String.format("Surprise: %s\n", face.getSurpriseLikelihood());
+                message += "\n";
+            }
+        }
+        else {
+            message += "I found no faces.";
+        }
+        message += "\n____________________________________________\n";
+        //*/
 
         return message;
     }
